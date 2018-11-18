@@ -1,9 +1,9 @@
 const setup = require("./starter-kit/setup");
 const URL = require("url");
 const download = require("image-downloader");
-const fs = require('fs');
-const promisify = require('util').promisify;
-const exec = require('child_process').exec;
+const fs = require("fs");
+const promisify = require("util").promisify;
+const exec = require("child_process").exec;
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -85,12 +85,7 @@ exports.takeScreenshot = async (browser, targetUrl) => {
             break;
     }
 
-    const {
-        x,
-        y,
-        width,
-        height
-    } = await element.boundingBox();
+    const { x, y, width, height } = await element.boundingBox();
 
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
@@ -117,7 +112,7 @@ exports.takeScreenshot = async (browser, targetUrl) => {
     return url;
 };
 
-exports.optimizeImage = async (targetUrl) => {
+exports.optimizeImage = async targetUrl => {
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
     await download.image({
@@ -130,7 +125,7 @@ exports.optimizeImage = async (targetUrl) => {
     return url;
 };
 
-exports.screenshotCode = async (codeBase64, codeType = 'js') => {
+exports.screenshotCode = async (codeBase64, codeType = "js") => {
     const code = Buffer.from(codeBase64, "base64").toString();
     const writeFile = promisify(fs.writeFile);
     const codePath = `/tmp/code-${new Date().getTime()}.${codeType}`;
@@ -138,11 +133,11 @@ exports.screenshotCode = async (codeBase64, codeType = 'js') => {
 
     await writeFile(codePath, code);
 
-    const {
-        stdout
-    } = await promisify(exec)(`node_modules/carbon-now-cli/cli.js ${codePath} -l /tmp -t ${carbonName}`);
+    const { stdout } = await promisify(exec)(
+        `node_modules/carbon-now-cli/cli.js ${codePath} -l /tmp -t ${carbonName} --config carbon-now.json`
+    );
 
     const url = await uploadScreenshot(`/tmp/${carbonName}.png`);
 
-    return url
+    return url;
 };
