@@ -13,8 +13,8 @@ provider:
     #     Resource: "arn:aws:s3:::<bucket name>/*"
 
 functions:
-    test-function:
-        handler: index.handler
+    screenshot-function:
+        handler: src/index.handler
         environment:
             DEBUG: 0
 
