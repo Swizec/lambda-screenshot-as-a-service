@@ -16,12 +16,32 @@ exports.run = async (browser) => {
     // implement here
     // this is sample
     const page = await browser.newPage();
-    await page.goto("https://www.google.com", {
+    await page.setViewport({
+        width: 1366,
+        height: 768,
+        isMobile: true
+    });
+
+    await page.goto("https://twitter.com/Swizec/status/1063932274528251904", {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
 
+    const tweet = await page.$('.permalink-tweet-container');
+    const {
+        x,
+        y,
+        width,
+        height
+    } = await tweet.boundingBox();
+
     await page.screenshot({
-        path: 'google-screen.png'
+        path: 'google-screen.png',
+        clip: {
+            x,
+            y,
+            width,
+            height
+        }
     })
 
     await page.close();
