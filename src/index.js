@@ -46,7 +46,7 @@ exports.handler = async (event, context, callback) => {
                 result = await exports.optimizeImage(targetUrl);
                 break;
             case "code":
-                result = await exports.screenshotCode(code, codeType);
+                result = await exports.screenshotCode(browser, code, codeType);
                 break;
             default:
                 result = await exports.takeScreenshot(browser, targetUrl);
@@ -85,7 +85,12 @@ exports.takeScreenshot = async (browser, targetUrl) => {
             break;
     }
 
-    const { x, y, width, height } = await element.boundingBox();
+    const {
+        x,
+        y,
+        width,
+        height
+    } = await element.boundingBox();
 
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
@@ -125,17 +130,49 @@ exports.optimizeImage = async targetUrl => {
     return url;
 };
 
-exports.screenshotCode = async (codeBase64, codeType = "js") => {
+exports.screenshotCode = async (browser, codeBase64, codeType = "javascript") => {
     const code = Buffer.from(codeBase64, "base64").toString();
-    const writeFile = promisify(fs.writeFile);
-    const codePath = `/tmp/code-${new Date().getTime()}.${codeType}`;
     const carbonName = `carbon-${new Date().getTime()}`;
 
-    await writeFile(codePath, code);
+    const page = await browser.newPage();
+    await page.setViewport({
+        width: 1366,
+        height: 768,
+        isMobile: true
+    });
 
-    const { stdout } = await promisify(exec)(
-        `node_modules/carbon-now-cli/cli.js ${codePath} -l /tmp -t ${carbonName} --config carbon-now.json`
-    );
+    const targetUrl = `https://carbon.now.sh/?bg=rgba(66,66,72,.3)&t=seti&l=${codeType}&ds=true&wc=true&wa=true&pv=48px&ph=32px&ln=false&code=${encodeURIComponent(code)}`;
+
+    await page.goto(targetUrl, {
+        waitUntil: ["domcontentloaded", "networkidle0"]
+    });
+
+    let element = await page.$(".export-container");
+
+    const {
+        x,
+        y,
+        width,
+        height
+    } = await element.boundingBox();
+
+    const imagePath = `/tmp/${carbonName}.png`;
+
+    console.error("Loaded target carbon");
+
+    await page.screenshot({
+        path: imagePath,
+        clip: {
+            x,
+            y,
+            width,
+            height
+        }
+    });
+
+    console.error("Made screeshot");
+
+    await browser.close();
 
     const url = await uploadScreenshot(`/tmp/${carbonName}.png`);
 

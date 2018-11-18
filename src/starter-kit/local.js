@@ -13,7 +13,14 @@ const type = process.argv[2],
             .then((result) => console.log(result))
             .catch((err) => console.error(err));
     } else if (type === "code") {
-        url = await index.screenshotCode(targetUrl)
+        const browser = await puppeteer.launch({
+            headless: false,
+            slowMo: process.env.SLOWMO_MS,
+            dumpio: !!config.DEBUG,
+            // use chrome installed by puppeteer
+        });
+
+        url = await index.screenshotCode(browser, targetUrl)
             .then((result) => console.log(result))
             .catch((err) => console.error(err));
     } else {
