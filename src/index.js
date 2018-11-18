@@ -7,13 +7,16 @@ exports.handler = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     const browser = await setup.getBrowser();
 
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+        "access-control-allow-methods": "GET"
+    };
+
     if (!event.queryStringParameters) {
         callback(null, {
             statusCode: 400,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                "Access-Control-Allow-Credentials": true
-            },
+            headers,
             body: "You need a url"
         });
     }
@@ -23,6 +26,7 @@ exports.handler = async (event, context, callback) => {
     if (!targetUrl) {
         callback(null, {
             statusCode: 400,
+            headers,
             body: "You need a url"
         });
     }
@@ -32,6 +36,7 @@ exports.handler = async (event, context, callback) => {
 
         callback(null, {
             statusCode: 200,
+            headers,
             body: result
         });
     } catch (e) {
@@ -54,12 +59,7 @@ exports.run = async (browser, targetUrl) => {
     });
 
     const tweet = await page.$(".permalink-tweet-container");
-    const {
-        x,
-        y,
-        width,
-        height
-    } = await tweet.boundingBox();
+    const { x, y, width, height } = await tweet.boundingBox();
 
     console.error("Loaded tweet");
 
@@ -77,7 +77,7 @@ exports.run = async (browser, targetUrl) => {
 
     const url = await uploadScreenshot("/tmp/screenshot.png");
 
-    console.error("Got url")
+    console.error("Got url");
 
     await page.close();
 
