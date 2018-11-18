@@ -1,20 +1,34 @@
 const setup = require("./starter-kit/setup");
 
-const uploadScreenshot = require("./uploadScreenshot");
+const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
 exports.handler = async (event, context, callback) => {
-    // For keeping the browser launch
+    // // For keeping the browser launch
     context.callbackWaitsForEmptyEventLoop = false;
     const browser = await setup.getBrowser();
+
+    const targetUrl = event.queryStringParameters.url;
+
+    if (!targetUrl) {
+        callback(null, {
+            statusCode: 400,
+            body: "You need a url"
+        });
+    }
+
     try {
-        const result = await exports.run(browser);
-        callback(null, result);
+        const result = await exports.run(browser, targetUrl);
+
+        callback(null, {
+            statusCode: 200,
+            body: result
+        });
     } catch (e) {
         callback(e);
     }
 };
 
-exports.run = async (browser) => {
+exports.run = async (browser, targetUrl) => {
     // implement here
     // this is sample
     const page = await browser.newPage();
@@ -24,7 +38,7 @@ exports.run = async (browser) => {
         isMobile: true
     });
 
-    await page.goto("https://twitter.com/Swizec/status/1063932274528251904", {
+    await page.goto(targetUrl, {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
 
@@ -36,6 +50,8 @@ exports.run = async (browser) => {
         height
     } = await tweet.boundingBox();
 
+    console.error("Loaded tweet");
+
     await page.screenshot({
         path: "/tmp/screenshot.png",
         clip: {
@@ -46,8 +62,13 @@ exports.run = async (browser) => {
         }
     });
 
-    uploadScreenshot("/tmp/screenshot.png");
+    console.error("Made screeshot");
+
+    const url = await uploadScreenshot("/tmp/screenshot.png");
+
+    console.error("Got url")
 
     await page.close();
-    return "done";
+
+    return url;
 };

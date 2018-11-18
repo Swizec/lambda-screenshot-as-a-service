@@ -23,7 +23,6 @@ exports.uploadScreenshot = async function uploadScreenshot(path) {
         ACL: 'public-read',
     }).promise();
 
-    console.log(Location);
 
     return Location;
 };
