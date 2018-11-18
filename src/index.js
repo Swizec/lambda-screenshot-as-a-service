@@ -1,5 +1,6 @@
 const setup = require("./starter-kit/setup");
 const URL = require('url');
+const download = require('image-downloader');
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -32,20 +33,31 @@ exports.handler = async (event, context, callback) => {
         });
     }
 
-    try {
-        const result = await exports.run(browser, targetUrl);
 
-        callback(null, {
-            statusCode: 200,
-            headers,
-            body: result
-        });
+    try {
+        if (event.queryStringParameters.type === "image") {
+            const result = await exports.optimizeImage(targetUrl);
+
+            callback(null, {
+                statusCode: 200,
+                headers,
+                body: result
+            })
+        } else {
+            const result = await exports.takeScreenshot(browser, targetUrl);
+
+            callback(null, {
+                statusCode: 200,
+                headers,
+                body: result
+            });
+        }
     } catch (e) {
         callback(e);
     }
 };
 
-exports.run = async (browser, targetUrl) => {
+exports.takeScreenshot = async (browser, targetUrl) => {
     // implement here
     // this is sample
     const page = await browser.newPage();
@@ -80,7 +92,6 @@ exports.run = async (browser, targetUrl) => {
 
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
-
     console.error("Loaded target element");
 
     await page.screenshot({
@@ -104,3 +115,16 @@ exports.run = async (browser, targetUrl) => {
 
     return url;
 };
+
+exports.optimizeImage = async (targetUrl) => {
+    const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
+
+    await download.image({
+        url: targetUrl,
+        dest: imagePath
+    });
+
+    const url = await uploadScreenshot(imagePath);
+
+    return url;
+}

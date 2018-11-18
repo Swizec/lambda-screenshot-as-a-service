@@ -3,11 +3,17 @@ const fs = require('fs');
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
 const imageminPngquant = require('imagemin-pngquant');
+const ImageminGm = require('imagemin-gm');
+
+const imageminGm = new ImageminGm();
+
 
 exports.uploadScreenshot = async function uploadScreenshot(path) {
     const screenshot = await imagemin([path], {
         plugins: [imageminJpegtran(), imageminPngquant({
             quality: '65-80'
+        }), imageminGm.resize({
+            width: 480
         })]
     })
 
