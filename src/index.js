@@ -1,5 +1,7 @@
 const setup = require("./starter-kit/setup");
 
+import uploadScreenshot from './uploadScreenshot';
+
 exports.handler = async (event, context, callback) => {
     // For keeping the browser launch
     context.callbackWaitsForEmptyEventLoop = false;
@@ -35,14 +37,16 @@ exports.run = async (browser) => {
     } = await tweet.boundingBox();
 
     await page.screenshot({
-        path: 'google-screen.png',
+        path: '/tmp/screenshot.png',
         clip: {
             x,
             y,
             width,
             height
         }
-    })
+    });
+
+    uploadScreenshot('/tmp/screenshot.png');
 
     await page.close();
     return "done";
