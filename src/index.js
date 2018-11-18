@@ -82,12 +82,7 @@ exports.takeScreenshot = async (browser, targetUrl) => {
             break;
     }
 
-    const {
-        x,
-        y,
-        width,
-        height
-    } = await element.boundingBox();
+    const { x, y, width, height } = await element.boundingBox();
 
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
@@ -127,7 +122,11 @@ exports.optimizeImage = async targetUrl => {
     return url;
 };
 
-exports.screenshotCode = async (browser, codeBase64, codeType = "javascript") => {
+exports.screenshotCode = async (
+    browser,
+    codeBase64,
+    codeType = "javascript"
+) => {
     const code = Buffer.from(codeBase64, "base64").toString();
     const carbonName = `carbon-${new Date().getTime()}`;
 
@@ -138,20 +137,19 @@ exports.screenshotCode = async (browser, codeBase64, codeType = "javascript") =>
         isMobile: true
     });
 
-    const targetUrl = `https://carbon.now.sh/?bg=rgba(66,66,72,.3)&t=seti&l=${codeType}&ds=true&wc=true&wa=true&pv=48px&ph=32px&ln=false&code=${encodeURIComponent(code)}`;
+    const targetUrl = `https://carbon.now.sh/?bg=rgba(255,255,255,1)&t=seti&l=${codeType}&ds=true&wc=true&wa=true&pv=48px&ph=32px&ln=false&code=${encodeURIComponent(
+        code
+    )}`;
 
     await page.goto(targetUrl, {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
 
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     let element = await page.$(".export-container");
 
-    const {
-        x,
-        y,
-        width,
-        height
-    } = await element.boundingBox();
+    const { x, y, width, height } = await element.boundingBox();
 
     const imagePath = `/tmp/${carbonName}.png`;
 
