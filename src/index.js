@@ -7,6 +7,13 @@ exports.handler = async (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     const browser = await setup.getBrowser();
 
+    if (!event.queryStringParameters) {
+        callback(null, {
+            statusCode: 400,
+            body: "You need a url"
+        });
+    }
+
     const targetUrl = event.queryStringParameters.url;
 
     if (!targetUrl) {
