@@ -1,9 +1,6 @@
 const setup = require("./starter-kit/setup");
 const URL = require("url");
 const download = require("image-downloader");
-const fs = require("fs");
-const promisify = require("util").promisify;
-const exec = require("child_process").exec;
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -174,7 +171,7 @@ exports.screenshotCode = async (browser, codeBase64, codeType = "javascript") =>
 
     await browser.close();
 
-    const url = await uploadScreenshot(`/tmp/${carbonName}.png`);
+    const url = await uploadScreenshot(`/tmp/${carbonName}.png`, false);
 
     return url;
 };
