@@ -11,6 +11,9 @@
         "lint": "./node_modules/.bin/eslint src"
     },
     "dependencies": {
+        "imagemin": "^6.0.0",
+        "imagemin-jpegtran": "^6.0.0",
+        "imagemin-pngquant": "^6.0.0",
         "puppeteer": "^1.1.1",
         "tar": "^4.0.1"
     },

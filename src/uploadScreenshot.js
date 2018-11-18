@@ -1,14 +1,15 @@
 const aws = require('aws-sdk');
 const fs = require('fs');
+const imagemin = require('imagemin');
+const imageminJpegtran = require('imagemin-jpegtran');
+const imageminPngquant = require('imagemin-pngquant');
 
 exports.uploadScreenshot = async function uploadScreenshot(path) {
-    const screenshot = await new Promise((resolve, reject) => {
-        fs.readFile(path, (err, data) => {
-            if (err) return reject(err);
-
-            resolve(data);
-        });
-    });
+    const screenshot = await imagemin([path], {
+        plugins: [imageminJpegtran(), imageminPngquant({
+            quality: '65-80'
+        })]
+    })
 
     const s3 = new aws.S3({
         apiVersion: '2006-03-01',
@@ -19,7 +20,7 @@ exports.uploadScreenshot = async function uploadScreenshot(path) {
     } = await s3.upload({
         Bucket: 'techletter.app',
         Key: `screenshot-${new Date().getTime()}.png`,
-        Body: screenshot,
+        Body: screenshot[0].data,
         ACL: 'public-read',
     }).promise();
 

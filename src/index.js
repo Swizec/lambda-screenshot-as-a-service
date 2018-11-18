@@ -77,10 +77,14 @@ exports.run = async (browser, targetUrl) => {
         height
     } = await element.boundingBox();
 
+
+    const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
+
+
     console.error("Loaded target element");
 
     await page.screenshot({
-        path: "/tmp/screenshot.png",
+        path: imagePath,
         clip: {
             x,
             y,
@@ -91,7 +95,8 @@ exports.run = async (browser, targetUrl) => {
 
     console.error("Made screeshot");
 
-    const url = await uploadScreenshot("/tmp/screenshot.png");
+
+    const url = await uploadScreenshot(imagePath);
 
     console.error("Got url");
 
