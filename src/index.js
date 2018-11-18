@@ -10,6 +10,10 @@ exports.handler = async (event, context, callback) => {
     if (!event.queryStringParameters) {
         callback(null, {
             statusCode: 400,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                "Access-Control-Allow-Credentials": true
+            },
             body: "You need a url"
         });
     }
