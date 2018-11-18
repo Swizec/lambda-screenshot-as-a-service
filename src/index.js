@@ -1,6 +1,9 @@
 const setup = require("./starter-kit/setup");
-const URL = require('url');
-const download = require('image-downloader');
+const URL = require("url");
+const download = require("image-downloader");
+const fs = require('fs');
+const promisify = require('util').promisify;
+const exec = require('child_process').exec;
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -24,42 +27,42 @@ exports.handler = async (event, context, callback) => {
     }
 
     const targetUrl = event.queryStringParameters.url;
+    const code = event.queryStringParameters.code;
+    const codeType = event.queryStringParameters.codeType;
 
-    if (!targetUrl) {
+    if (!targetUrl && !code) {
         callback(null, {
             statusCode: 400,
             headers,
-            body: "You need a url"
+            body: "You need something to do"
         });
     }
 
-
     try {
-        if (event.queryStringParameters.type === "image") {
-            const result = await exports.optimizeImage(targetUrl);
+        let result = null;
 
-            callback(null, {
-                statusCode: 200,
-                headers,
-                body: result
-            })
-        } else {
-            const result = await exports.takeScreenshot(browser, targetUrl);
-
-            callback(null, {
-                statusCode: 200,
-                headers,
-                body: result
-            });
+        switch (event.queryStringParameters.type) {
+            case "image":
+                result = await exports.optimizeImage(targetUrl);
+                break;
+            case "code":
+                result = await exports.screenshotCode(code, codeType);
+                break;
+            default:
+                result = await exports.takeScreenshot(browser, targetUrl);
         }
+
+        callback(null, {
+            statusCode: 200,
+            headers,
+            body: result
+        });
     } catch (e) {
         callback(e);
     }
 };
 
 exports.takeScreenshot = async (browser, targetUrl) => {
-    // implement here
-    // this is sample
     const page = await browser.newPage();
     await page.setViewport({
         width: 1366,
@@ -89,7 +92,6 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         height
     } = await element.boundingBox();
 
-
     const imagePath = `/tmp/screenshot-${new Date().getTime()}.png`;
 
     console.error("Loaded target element");
@@ -105,7 +107,6 @@ exports.takeScreenshot = async (browser, targetUrl) => {
     });
 
     console.error("Made screeshot");
-
 
     const url = await uploadScreenshot(imagePath);
 
@@ -127,4 +128,21 @@ exports.optimizeImage = async (targetUrl) => {
     const url = await uploadScreenshot(imagePath);
 
     return url;
-}
+};
+
+exports.screenshotCode = async (codeBase64, codeType = 'js') => {
+    const code = Buffer.from(codeBase64, "base64").toString();
+    const writeFile = promisify(fs.writeFile);
+    const codePath = `/tmp/code-${new Date().getTime()}.${codeType}`;
+    const carbonName = `carbon-${new Date().getTime()}`;
+
+    await writeFile(codePath, code);
+
+    const {
+        stdout
+    } = await promisify(exec)(`node_modules/carbon-now-cli/cli.js ${codePath} -l /tmp -t ${carbonName}`);
+
+    const url = await uploadScreenshot(`/tmp/${carbonName}.png`);
+
+    return url
+};

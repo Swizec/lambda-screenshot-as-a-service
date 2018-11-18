@@ -12,6 +12,10 @@ const type = process.argv[2],
         url = await index.optimizeImage(targetUrl)
             .then((result) => console.log(result))
             .catch((err) => console.error(err));
+    } else if (type === "code") {
+        url = await index.screenshotCode(targetUrl)
+            .then((result) => console.log(result))
+            .catch((err) => console.error(err));
     } else {
         const browser = await puppeteer.launch({
             headless: false,
