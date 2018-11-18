@@ -1,4 +1,5 @@
 const setup = require("./starter-kit/setup");
+const URL = require('url');
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -58,10 +59,25 @@ exports.run = async (browser, targetUrl) => {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
 
-    const tweet = await page.$(".permalink-tweet-container");
-    const { x, y, width, height } = await tweet.boundingBox();
+    let element = null;
 
-    console.error("Loaded tweet");
+    switch (URL.parse(await page.url()).hostname) {
+        case "twitter.com":
+            element = await page.$(".permalink-tweet-container");
+            break;
+        case "www.youtube.com":
+            element = await page.$(".html5-video-player");
+            break;
+    }
+
+    const {
+        x,
+        y,
+        width,
+        height
+    } = await element.boundingBox();
+
+    console.error("Loaded target element");
 
     await page.screenshot({
         path: "/tmp/screenshot.png",
