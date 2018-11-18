@@ -3,7 +3,9 @@ const fs = require('fs');
 const imagemin = require('imagemin');
 const imageminJpegtran = require('imagemin-jpegtran');
 const imageminPngquant = require('imagemin-pngquant');
-const gm = require('gm');
+const gm = require('gm').subClass({
+    imageMagick: true
+});
 
 exports.uploadScreenshot = async function uploadScreenshot(path) {
     const screenshot = await imagemin([path], {
