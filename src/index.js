@@ -1,6 +1,6 @@
 const setup = require("./starter-kit/setup");
 
-import uploadScreenshot from './uploadScreenshot';
+const uploadScreenshot = require("./uploadScreenshot");
 
 exports.handler = async (event, context, callback) => {
     // For keeping the browser launch
@@ -28,7 +28,7 @@ exports.run = async (browser) => {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
 
-    const tweet = await page.$('.permalink-tweet-container');
+    const tweet = await page.$(".permalink-tweet-container");
     const {
         x,
         y,
@@ -37,7 +37,7 @@ exports.run = async (browser) => {
     } = await tweet.boundingBox();
 
     await page.screenshot({
-        path: '/tmp/screenshot.png',
+        path: "/tmp/screenshot.png",
         clip: {
             x,
             y,
@@ -46,7 +46,7 @@ exports.run = async (browser) => {
         }
     });
 
-    uploadScreenshot('/tmp/screenshot.png');
+    uploadScreenshot("/tmp/screenshot.png");
 
     await page.close();
     return "done";

@@ -6,15 +6,15 @@ provider:
     memorySize: 1536
     timeout: 180
     # if needed (e.g. upload snapshot)
-    # iamRoleStatements:
-    #  -  Effect: "Allow"
-    #     Action:
-    #       - "s3:PutObject"
-    #     Resource: "arn:aws:s3:::<bucket name>/*"
+    iamRoleStatements:
+        - Effect: "Allow"
+          Action:
+              - "s3:upload"
+          Resource: "arn:aws:s3:::techletter.app/*"
 
 functions:
     screenshot-function:
-        handler: src/index.handler
+        handler: index.handler
         environment:
             DEBUG: 0
 
