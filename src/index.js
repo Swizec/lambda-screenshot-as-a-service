@@ -62,8 +62,8 @@ exports.handler = async (event, context, callback) => {
 exports.takeScreenshot = async (browser, targetUrl) => {
     const page = await browser.newPage();
     await page.setViewport({
-        width: 1366,
-        height: 768,
+        width: 1920,
+        height: 1080,
         isMobile: true
     });
 
@@ -91,10 +91,10 @@ exports.takeScreenshot = async (browser, targetUrl) => {
     await page.screenshot({
         path: imagePath,
         clip: {
-            x,
-            y,
-            width,
-            height
+            x + 2,
+            y + 2,
+            width - 2,
+            height - 2
         }
     });
 
