@@ -91,10 +91,10 @@ exports.takeScreenshot = async (browser, targetUrl) => {
     await page.screenshot({
         path: imagePath,
         clip: {
-            x + 2,
-            y + 2,
-            width - 2,
-            height - 2
+            x: x + 2,
+            y: y + 2,
+            width: width - 2,
+            height: height - 2
         }
     });
 
@@ -161,7 +161,7 @@ exports.screenshotCode = async (
             x,
             y,
             width,
-            height - 2
+            height: height - 2
         }
     });
 
