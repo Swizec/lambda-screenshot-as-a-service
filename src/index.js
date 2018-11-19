@@ -161,7 +161,7 @@ exports.screenshotCode = async (
             x,
             y,
             width,
-            height
+            height - 2
         }
     });
 
