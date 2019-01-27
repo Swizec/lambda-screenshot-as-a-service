@@ -141,6 +141,8 @@ exports.screenshotCode = async (
         code
     )}`;
 
+    console.log("TargetURL", targetUrl);
+
     await page.goto(targetUrl, {
         waitUntil: ["domcontentloaded", "networkidle0"]
     });
@@ -165,7 +167,12 @@ exports.screenshotCode = async (
         }
     });
 
-    console.error("Made screeshot");
+    console.error("Made screeshot", {
+        x,
+        y,
+        width,
+        height: height - 2
+    });
 
     await browser.close();
 
