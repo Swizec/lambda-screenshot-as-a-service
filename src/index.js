@@ -1,6 +1,7 @@
 const setup = require("./starter-kit/setup");
 const URL = require("url");
 const download = require("image-downloader");
+const Base64 = require("js-base64").Base64;
 
 const uploadScreenshot = require("./uploadScreenshot").uploadScreenshot;
 
@@ -127,7 +128,7 @@ exports.screenshotCode = async (
     codeBase64,
     codeType = "javascript"
 ) => {
-    const code = Buffer.from(codeBase64, "base64").toString();
+    const code = Base64.decode(codeBase64);
     const carbonName = `carbon-${new Date().getTime()}`;
 
     const page = await browser.newPage();
@@ -136,6 +137,8 @@ exports.screenshotCode = async (
         height: 768,
         isMobile: true
     });
+
+    console.log("CODE", code);
 
     const targetUrl = `https://carbon.now.sh/?bg=rgba(255,255,255,1)&t=dracula&l=${codeType}&ds=true&wc=true&wa=true&pv=48px&ph=32px&ln=false&code=${encodeURIComponent(
         code
