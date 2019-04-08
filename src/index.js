@@ -128,7 +128,7 @@ exports.screenshotCode = async (
     codeBase64,
     codeType = "javascript"
 ) => {
-    const code = Base64.decode(codeBase64);
+    const code = Base64.decode(codeBase64.replace(" ", "+"));
     const carbonName = `carbon-${new Date().getTime()}`;
 
     const page = await browser.newPage();
