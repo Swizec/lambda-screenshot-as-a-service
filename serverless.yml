@@ -3,8 +3,8 @@ service: screenshot-as-a-service
 provider:
     name: aws
     runtime: nodejs8.10
-    memorySize: 1536
-    timeout: 180
+    memorySize: 2536
+    timeout: 25
     # if needed (e.g. upload snapshot)
     iamRoleStatements:
         - Effect: "Allow"
@@ -14,17 +14,22 @@ provider:
 
 functions:
     screenshot-function:
-        handler: index.handler
+        handler: src/index.handler
         environment:
             DEBUG: 0
 
 package:
-    artifact: ./package.zip
+    exclude:
+        - node_modules/puppeteer/.local-chromium/**
 
 plugins:
-    - serverless-hooks-plugin
+    - serverless-plugin-chrome
 
 custom:
-    hooks:
-        package:initialize:
-            - npm run package
+    chrome:
+        flags:
+            - --window-size=1280,1696 # Letter size
+            - --hide-scrollbars
+            - --ignore-certificate-errors
+        functions:
+            - screenshot-function

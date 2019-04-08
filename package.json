@@ -2,19 +2,13 @@
     "name": "screenshot-as-a-service",
     "version": "1.1.2",
     "description": "Starter Kit for running Headless-Chrome by Puppeteer on AWS Lambda",
-    "scripts": {
-        "package": "npm run package-prepare && cp chrome/headless_shell.tar.gz dist && cd dist && zip -rq ../package.zip .",
-        "package-nochrome": "npm run package-prepare && cd dist && zip -rq ../package.zip .",
-        "package-prepare": "npm run babel && cp -r package.json dist && cd dist && PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install --production",
-        "babel": "rm -rf dist && mkdir dist && ./node_modules/.bin/babel src --out-dir dist",
-        "local": "npm run babel && cp -r node_modules dist && node dist/starter-kit/local.js",
-        "lint": "./node_modules/.bin/eslint src"
-    },
     "dependencies": {
+        "@serverless-chrome/lambda": "^1.0.0-55",
         "gm": "^1.23.1",
         "image-downloader": "^3.4.1",
         "js-base64": "^2.5.1",
-        "puppeteer": "^1.10.0",
+        "puppeteer-core": "^1.14.0",
+        "superagent": "^5.0.2",
         "tar": "^4.0.1"
     },
     "devDependencies": {
@@ -23,6 +17,7 @@
         "babel-preset-env": "^1.6.0",
         "eslint": "^4.6.1",
         "eslint-config-google": "^0.9.1",
-        "serverless-hooks-plugin": "^1.1.0"
+        "serverless-hooks-plugin": "^1.1.0",
+        "serverless-plugin-chrome": "^1.0.0-55"
     }
 }
