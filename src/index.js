@@ -114,9 +114,7 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     const url = await uploadScreenshot(imagePath);
 
-    console.error("Got url");
-
-    await page.close();
+    console.error("Got url", url);
 
     return url;
 };
