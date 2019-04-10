@@ -22,6 +22,9 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         case "www.youtube.com":
             element = await page.$(".html5-video-player");
             break;
+        case "www.instagram.com":
+            element = await page.$("article");
+            break;
     }
 
     const { x, y, width, height } = await element.boundingBox();
