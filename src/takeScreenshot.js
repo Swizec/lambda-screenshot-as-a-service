@@ -9,9 +9,13 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         isMobile: true
     });
 
+    console.log("Requesting", targetUrl);
+
     await page.goto(targetUrl, {
-        waitUntil: ["domcontentloaded", "networkidle0"]
+        waitUntil: ["domcontentloaded", "networkidle2"]
     });
+
+    console.log("page loaded");
 
     let element = null;
 
@@ -25,7 +29,12 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         case "www.instagram.com":
             element = await page.$("article");
             break;
+        case "codesandbox.io":
+            element = await page.$(".SplitPane");
+            break;
     }
+
+    console.log("found element", element);
 
     const { x, y, width, height } = await element.boundingBox();
 
