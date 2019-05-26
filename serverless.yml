@@ -5,7 +5,6 @@ provider:
     runtime: nodejs8.10
     memorySize: 2536
     timeout: 180
-    # if needed (e.g. upload snapshot)
     iamRoleStatements:
         - Effect: "Allow"
           Action:

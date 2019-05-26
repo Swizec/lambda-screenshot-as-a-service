@@ -9,7 +9,8 @@
         "js-base64": "^2.5.1",
         "puppeteer-core": "^1.14.0",
         "superagent": "^5.0.2",
-        "tar": "^4.0.1"
+        "tar": "^4.0.1",
+        "url": "^0.11.0"
     },
     "devDependencies": {
         "aws-sdk": "^2.358.0",
