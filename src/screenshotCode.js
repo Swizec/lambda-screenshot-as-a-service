@@ -1,15 +1,19 @@
 const Base64 = require("js-base64").Base64;
 const { uploadScreenshot } = require("./uploadScreenshot");
 
-exports.screenshotCode = async (
+exports.screenshotCode = async ({
     browser,
-    codeBase64,
-    codeType = "javascript"
-) => {
-    const code = Base64.decode(codeBase64.replace(" ", "+"));
+    code,
+    codeType = "javascript",
+    urlencoded
+}) => {
+    const inputCode = urlencoded
+        ? decodeURIComponent(code)
+        : Base64.decode(code.replace(" ", "+"));
+
     const carbonName = `carbon-${new Date().getTime()}`;
 
-    console.log("CODE", code);
+    console.log("CODE", inputCode);
 
     const page = await browser.newPage();
 
@@ -24,7 +28,7 @@ exports.screenshotCode = async (
     console.log("SET VIEWPORT");
 
     const targetUrl = `https://carbon.now.sh/?bg=rgba(255,255,255,1)&t=dracula&l=${codeType}&ds=true&wc=true&wa=true&pv=48px&ph=32px&ln=false&code=${encodeURIComponent(
-        code
+        inputCode
     )}`;
 
     console.log("TargetURL", targetUrl);

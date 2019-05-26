@@ -37,6 +37,7 @@ exports.handler = async (event, context, callback) => {
     const targetUrl = event.queryStringParameters.url;
     const code = event.queryStringParameters.code;
     const codeType = event.queryStringParameters.codeType;
+    const urlencoded = event.queryStringParameters.urlencoded === "true";
 
     if (!targetUrl && !code) {
         callback(null, {
@@ -54,7 +55,12 @@ exports.handler = async (event, context, callback) => {
                 result = await optimizeImage(targetUrl);
                 break;
             case "code":
-                result = await screenshotCode(browser, code, codeType);
+                result = await screenshotCode({
+                    browser,
+                    code,
+                    codeType,
+                    urlencoded
+                });
                 break;
             default:
                 result = await takeScreenshot(browser, targetUrl);
