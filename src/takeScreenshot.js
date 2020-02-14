@@ -22,16 +22,11 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     switch (URL.parse(await page.url()).hostname) {
         case "twitter.com":
-            const url = `https://publish.twitter.com/oembed?url=${encodeURIComponent(
-                targetUrl
-            )}`;
-            console.log("doing twitter with", url);
-            const oembed = await fetch(url).then(res => res.json());
+            await page.goto(`https://tweet-embedder.now.sh?url=${targetUrl}`, {
+                waitUntil: ["domcontentloaded", "networkidle2"]
+            });
 
-            console.log({ oembed });
-
-            await page.setContent(oembed.html);
-            element = await page.$("body");
+            element = await page.$("twitter-widget");
             break;
         case "www.youtube.com":
             element = await page.$(".html5-video-player");
