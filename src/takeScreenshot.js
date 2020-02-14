@@ -1,5 +1,6 @@
 const URL = require("url");
 const { uploadScreenshot } = require("./uploadScreenshot");
+const fetch = require("isomorphic-fetch");
 
 exports.takeScreenshot = async (browser, targetUrl) => {
     const page = await browser.newPage();
@@ -21,7 +22,16 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     switch (URL.parse(await page.url()).hostname) {
         case "twitter.com":
-            element = await page.$(".permalink-tweet-container");
+            const url = `https://publish.twitter.com/oembed?url=${encodeURIComponent(
+                targetUrl
+            )}`;
+            console.log("doing twitter with", url);
+            const oembed = await fetch(url).then(res => res.json());
+
+            console.log({ oembed });
+
+            await page.setContent(oembed.html);
+            element = await page.$("body");
             break;
         case "www.youtube.com":
             element = await page.$(".html5-video-player");
