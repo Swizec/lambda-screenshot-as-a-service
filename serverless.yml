@@ -16,6 +16,11 @@ functions:
         handler: src/index.handler
         environment:
             DEBUG: 0
+        events:
+            - http:
+                  path: screenshot
+                  method: GET
+                  cors: true
 
 package:
     exclude:

@@ -6,6 +6,20 @@ const { optimizeImage } = require("./optimizeImage");
 const { screenshotCode } = require("./screenshotCode.js");
 const { takeScreenshot } = require("./takeScreenshot.js");
 
+function response(statusCode, body) {
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+        "access-control-allow-methods": "GET"
+    };
+
+    return {
+        statusCode,
+        headers,
+        body
+    };
+}
+
 exports.handler = async (event, context, callback) => {
     // // For keeping the browser launch
     context.callbackWaitsForEmptyEventLoop = false;
@@ -20,18 +34,8 @@ exports.handler = async (event, context, callback) => {
 
     console.log("got browser");
 
-    const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": true,
-        "access-control-allow-methods": "GET"
-    };
-
     if (!event.queryStringParameters) {
-        callback(null, {
-            statusCode: 400,
-            headers,
-            body: "You need a url"
-        });
+        return response(400, "You need a url");
     }
 
     const targetUrl = event.queryStringParameters.url;
@@ -40,11 +44,7 @@ exports.handler = async (event, context, callback) => {
     const urlencoded = event.queryStringParameters.urlencoded === "true";
 
     if (!targetUrl && !code) {
-        callback(null, {
-            statusCode: 400,
-            headers,
-            body: "You need something to do"
-        });
+        return response(400, "You need something to do");
     }
 
     try {
@@ -66,12 +66,8 @@ exports.handler = async (event, context, callback) => {
                 result = await takeScreenshot(browser, targetUrl);
         }
 
-        callback(null, {
-            statusCode: 200,
-            headers,
-            body: result
-        });
+        return response(200, result);
     } catch (e) {
-        callback(e);
+        return response(500, e);
     }
 };

@@ -20,5 +20,8 @@
         "eslint-config-google": "^0.9.1",
         "serverless-hooks-plugin": "^1.1.0",
         "serverless-plugin-chrome": "^1.0.0-55"
+    },
+    "scripts": {
+        "deploy": "sls deploy"
     }
 }
