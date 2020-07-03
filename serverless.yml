@@ -2,7 +2,7 @@ service: screenshot-as-a-service
 
 provider:
     name: aws
-    runtime: nodejs8.10
+    runtime: nodejs12.x
     memorySize: 2536
     timeout: 180
     iamRoleStatements:
