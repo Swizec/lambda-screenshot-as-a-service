@@ -3,13 +3,12 @@
     "version": "1.1.2",
     "description": "Starter Kit for running Headless-Chrome by Puppeteer on AWS Lambda",
     "dependencies": {
-        "@serverless-chrome/lambda": "^1.0.0-55",
+        "chrome-aws-lambda": "^3.1.1",
         "gm": "^1.23.1",
         "image-downloader": "^3.4.1",
         "isomorphic-fetch": "^2.2.1",
         "js-base64": "^2.5.1",
-        "puppeteer-core": "^1.14.0",
-        "superagent": "^5.0.2",
+        "puppeteer-core": "3.1.0",
         "tar": "^4.0.1",
         "url": "^0.11.0"
     },
@@ -19,8 +18,7 @@
         "babel-preset-env": "^1.6.0",
         "eslint": "^4.6.1",
         "eslint-config-google": "^0.9.1",
-        "serverless-hooks-plugin": "^1.1.0",
-        "serverless-plugin-chrome": "^1.0.0-55.3"
+        "serverless-hooks-plugin": "^1.1.0"
     },
     "scripts": {
         "deploy": "sls deploy"

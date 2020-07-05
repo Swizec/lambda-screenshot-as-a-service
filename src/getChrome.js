@@ -1,19 +1,26 @@
-const launchChrome = require("@serverless-chrome/lambda");
-const request = require("superagent");
+const chrome = require("chrome-aws-lambda");
 
 const getChrome = async () => {
-    const chrome = await launchChrome();
+    console.log("LAUNCHING CHROME");
+    let browser = null;
 
-    const response = await request
-        .get(`${chrome.url}/json/version`)
-        .set("Content-Type", "application/json");
+    console.log("executable path", await chrome.executablePath);
 
-    const endpoint = response.body.webSocketDebuggerUrl;
+    try {
+        browser = await chrome.puppeteer.launch({
+            args: chrome.args,
+            defaultViewport: chrome.defaultViewport,
+            executablePath: await chrome.executablePath,
+            headless: chrome.headless,
+            ignoreHTTPSErrors: true,
+        });
+    } catch (err) {
+        console.log("ERROR LAUNCHING CHROME");
+        console.error(err);
+        throw err;
+    }
 
-    return {
-        endpoint,
-        instance: chrome
-    };
+    return browser;
 };
 
 module.exports = getChrome;

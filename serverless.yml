@@ -14,8 +14,6 @@ provider:
 functions:
     screenshot-function:
         handler: src/index.handler
-        environment:
-            DEBUG: 0
         events:
             - http:
                   path: screenshot
@@ -25,15 +23,3 @@ functions:
 package:
     exclude:
         - node_modules/puppeteer/.local-chromium/**
-
-plugins:
-    - serverless-plugin-chrome
-
-custom:
-    chrome:
-        flags:
-            - --window-size=1280,1696 # Letter size
-            - --hide-scrollbars
-            - --ignore-certificate-errors
-        functions:
-            - screenshot-function

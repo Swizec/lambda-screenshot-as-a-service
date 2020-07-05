@@ -1,6 +1,5 @@
 // const setup = require("./starter-kit/setup");
 const getChrome = require("./getChrome");
-const puppeteer = require("puppeteer-core");
 
 const { optimizeImage } = require("./optimizeImage");
 const { screenshotCode } = require("./screenshotCode.js");
@@ -10,27 +9,20 @@ function response(statusCode, body) {
     const headers = {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
-        "access-control-allow-methods": "GET"
+        "access-control-allow-methods": "GET",
     };
 
     return {
         statusCode,
         headers,
-        body
+        body,
     };
 }
 
 exports.handler = async (event, context, callback) => {
     // // For keeping the browser launch
     context.callbackWaitsForEmptyEventLoop = false;
-    const chrome = await getChrome();
-
-    console.log("got chrome");
-    console.log(chrome);
-
-    const browser = await puppeteer.connect({
-        browserWSEndpoint: chrome.endpoint
-    });
+    const browser = await getChrome();
 
     console.log("got browser");
 
@@ -59,7 +51,7 @@ exports.handler = async (event, context, callback) => {
                     browser,
                     code,
                     codeType,
-                    urlencoded
+                    urlencoded,
                 });
                 break;
             default:
