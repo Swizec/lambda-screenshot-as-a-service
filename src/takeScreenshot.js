@@ -1,6 +1,5 @@
 const URL = require("url");
 const { uploadScreenshot } = require("./uploadScreenshot");
-const fetch = require("isomorphic-fetch");
 
 exports.takeScreenshot = async (browser, targetUrl) => {
     const page = await browser.newPage();
@@ -9,7 +8,6 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         height: 1080,
         isMobile: true,
         deviceScaleFactor: 2,
-        isLandscape: true,
     });
 
     console.log("Requesting", targetUrl);
