@@ -6,7 +6,13 @@ const getChrome = async () => {
     try {
         browser = await chrome.puppeteer.launch({
             args: chrome.args,
-            defaultViewport: chrome.defaultViewport,
+            defaultViewport: {
+                width: 1920,
+                height: 1080,
+                isMobile: true,
+                deviceScaleFactor: 2,
+                isLandscape: true,
+            },
             executablePath: await chrome.executablePath,
             headless: chrome.headless,
             ignoreHTTPSErrors: true,

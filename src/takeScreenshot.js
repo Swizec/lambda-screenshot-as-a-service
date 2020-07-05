@@ -8,6 +8,8 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         width: 1920,
         height: 1080,
         isMobile: true,
+        deviceScaleFactor: 2,
+        isLandscape: true,
     });
 
     console.log("Requesting", targetUrl);

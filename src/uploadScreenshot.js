@@ -1,6 +1,6 @@
 const aws = require("aws-sdk");
 const gm = require("gm").subClass({
-    imageMagick: true
+    imageMagick: true,
 });
 const fs = require("fs");
 
@@ -12,13 +12,16 @@ exports.uploadScreenshot = async function uploadScreenshot(
 ) {
     return new Promise((resolve, reject) => {
         const s3 = new aws.S3({
-            apiVersion: "2006-03-01"
+            apiVersion: "2006-03-01",
         });
+
+        resize = false;
 
         if (resize) {
             gm(path)
-                .resize(640)
-                .toBuffer("png", async function(err, buffer) {
+                .resize(1024)
+                .toBuffer("png", async function (err, buffer) {
+                    console.log("resized to", { err, buffer });
                     if (err) reject(err);
 
                     const { Location } = await s3
@@ -26,14 +29,14 @@ exports.uploadScreenshot = async function uploadScreenshot(
                             Bucket: BUCKET,
                             Key: `screenshot-${new Date().getTime()}.png`,
                             Body: buffer,
-                            ACL: "public-read"
+                            ACL: "public-read",
                         })
                         .promise();
 
                     resolve(Location);
                 });
         } else {
-            (async function() {
+            (async function () {
                 const buffer = await new Promise((resolve, reject) => {
                     fs.readFile(path, (err, data) => {
                         if (err) reject(err);
@@ -46,7 +49,7 @@ exports.uploadScreenshot = async function uploadScreenshot(
                         Bucket: BUCKET,
                         Key: `screenshot-${new Date().getTime()}.png`,
                         Body: buffer,
-                        ACL: "public-read"
+                        ACL: "public-read",
                     })
                     .promise();
 
