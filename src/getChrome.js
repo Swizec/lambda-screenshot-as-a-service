@@ -1,10 +1,7 @@
 const chrome = require("chrome-aws-lambda");
 
 const getChrome = async () => {
-    console.log("LAUNCHING CHROME");
     let browser = null;
-
-    console.log("executable path", await chrome.executablePath);
 
     try {
         browser = await chrome.puppeteer.launch({

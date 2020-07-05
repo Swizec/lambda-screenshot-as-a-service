@@ -22,11 +22,18 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     switch (URL.parse(await page.url()).hostname) {
         case "twitter.com":
-            await page.goto(`https://tweet-embedder.now.sh?url=${targetUrl}`, {
-                waitUntil: ["domcontentloaded", "networkidle2"],
-            });
+            await page.goto(
+                `https://tweet-embedder.swizec.vercel.app?url=${targetUrl}`,
+                {
+                    waitUntil: ["domcontentloaded", "networkidle2"],
+                }
+            );
 
-            element = await page.$("#app");
+            console.log(
+                `https://tweet-embedder.swizec.vercel.app?url=${targetUrl}`
+            );
+
+            element = await page.$("#tweet");
             break;
         case "www.youtube.com":
             element = await page.$(".html5-video-player");
