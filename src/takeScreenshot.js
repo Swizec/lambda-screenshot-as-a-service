@@ -1,20 +1,19 @@
-const URL = require("url");
-const { uploadScreenshot } = require("./uploadScreenshot");
+const {uploadScreenshot} = require("./uploadScreenshot");
 
 exports.takeScreenshot = async (browser, targetUrl) => {
     const page = await browser.newPage();
+
     await page.setViewport({
         width: 800,
         height: 500,
-        isMobile: true,
-        deviceScaleFactor: 2,
+        isLandscape: true,
     });
 
     console.log("Requesting", targetUrl);
 
-    await page.goto(targetUrl, {
-        waitUntil: ["domcontentloaded", "networkidle2"],
-    });
+    await page.goto(targetUrl);
+
+    await sleep(4000);
 
     console.log("page loaded");
 
@@ -26,9 +25,13 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     console.error("Made screeshot");
 
-    const url = await uploadScreenshot(imagePath);
+    await uploadScreenshot(imagePath);
 
-    console.error("Got url", url);
-
-    return url;
+    return 'Test';
 };
+
+function sleep(millis) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve("hello"), millis)
+    });
+}

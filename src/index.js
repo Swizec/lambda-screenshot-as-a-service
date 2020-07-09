@@ -1,9 +1,7 @@
 // const setup = require("./starter-kit/setup");
 const getChrome = require("./getChrome");
 
-const { optimizeImage } = require("./optimizeImage");
-const { screenshotCode } = require("./screenshotCode.js");
-const { takeScreenshot } = require("./takeScreenshot.js");
+const {takeScreenshot} = require("./takeScreenshot.js");
 
 function response(statusCode, body) {
     const headers = {
@@ -31,32 +29,14 @@ exports.handler = async (event, context, callback) => {
     }
 
     const targetUrl = event.queryStringParameters.url;
-    const code = event.queryStringParameters.code;
-    const codeType = event.queryStringParameters.codeType;
-    const urlencoded = event.queryStringParameters.urlencoded === "true";
 
-    if (!targetUrl && !code) {
-        return response(400, "You need something to do");
+    if (!targetUrl) {
+        return response(400, "URL query parameter required");
     }
 
     try {
-        let result = null;
 
-        switch (event.queryStringParameters.type) {
-            case "image":
-                result = await optimizeImage(targetUrl);
-                break;
-            case "code":
-                result = await screenshotCode({
-                    browser,
-                    code,
-                    codeType,
-                    urlencoded,
-                });
-                break;
-            default:
-                result = await takeScreenshot(browser, targetUrl);
-        }
+        const result = await takeScreenshot(browser, targetUrl);
 
         return response(200, result);
     } catch (e) {

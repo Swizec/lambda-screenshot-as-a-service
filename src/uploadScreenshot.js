@@ -9,7 +9,7 @@ exports.uploadScreenshot = async function uploadScreenshot(path) {
         region: 'eu-west-1'
     });
 
-    let params     = {
+    let params = {
         Bucket: BUCKET,
         Key: `screenshot-${new Date().getTime()}.png`,
         ContentType: mime.lookup(path),
@@ -17,7 +17,7 @@ exports.uploadScreenshot = async function uploadScreenshot(path) {
         ACL: 'public-read'
     };
 
-    const { Location } = await s3
+    const {Location} = await s3
         .putObject(params)
         .promise();
 
