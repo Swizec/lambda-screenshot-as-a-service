@@ -1,8 +1,7 @@
-const {uploadScreenshot} = require("./uploadScreenshot");
+const { uploadScreenshot } = require("./uploadScreenshot");
 
-exports.takeScreenshot = async (browser, targetUrl) => {
+exports.takeScreenshot = async (browser, targetUrl, s3FolderPath, name) => {
     const page = await browser.newPage();
-
     await page.setViewport({
         width: 800,
         height: 500,
@@ -23,14 +22,12 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         path: imagePath,
     });
 
-    console.error("Made screeshot");
-
-    await uploadScreenshot(imagePath);
+    await uploadScreenshot(imagePath, s3FolderPath, name);
 
     return 'Test';
 };
 
-function sleep(millis) {
+function sleep(millis){
     return new Promise((resolve, reject) => {
         setTimeout(() => resolve("hello"), millis)
     });

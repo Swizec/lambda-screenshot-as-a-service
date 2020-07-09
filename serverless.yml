@@ -1,27 +1,29 @@
 service: screenshot-as-a-service
 
 provider:
-    name: aws
-    region: eu-west-1
-    runtime: nodejs12.x
-    memorySize: 2536
-    timeout: 180
-    iamRoleStatements:
-        - Effect: "Allow"
-          Action:
-              - "s3:PutObject"
-              - "s3:PutObjectAcl"
-          Resource: "arn:aws:s3:::public-for-testing123/*"
+  name: aws
+  region: eu-west-1
+  runtime: nodejs12.x
+  memorySize: 2536
+  timeout: 180
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:PutObjectAcl"
+      Resource: "arn:aws:s3:::public-for-testing123/*"
 
 functions:
-    screenshot-function:
-        handler: src/index.handler
-        events:
-            - http:
-                  path: screenshot
-                  method: GET
-                  cors: true
+  screenshot-function:
+    handler: src/index.handler
+    environment:
+      S3_BUCKET_PATH: "public-for-testing123/screenshots"
+    events:
+      - http:
+          path: screenshot
+          method: GET
+          cors: true
 
 package:
-    exclude:
-        - node_modules/puppeteer/.local-chromium/**
+  exclude:
+    - node_modules/puppeteer/.local-chromium/**

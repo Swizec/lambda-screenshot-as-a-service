@@ -1,25 +1,24 @@
 const aws = require("aws-sdk");
 const fs = require("fs");
 const mime = require('mime-types')
+const requireEnv = require('require-env')
 
-const BUCKET = "public-for-testing123";
+const S3_BUCKET_PATH = requireEnv.require('S3_BUCKET_PATH');
 
-exports.uploadScreenshot = async function uploadScreenshot(path) {
-    const s3 = new aws.S3({
-        region: 'eu-west-1'
-    });
+exports.uploadScreenshot = async function uploadScreenshot(path, s3FolderPath, name) {
+    const s3 = new aws.S3();
+
+    const filePath = `${s3FolderPath}/${name}.png`
 
     let params = {
-        Bucket: BUCKET,
-        Key: `screenshot-${new Date().getTime()}.png`,
+        Bucket: S3_BUCKET_PATH,
+        Key: filePath,
         ContentType: mime.lookup(path),
         Body: fs.readFileSync(path),
         ACL: 'public-read'
     };
 
-    const {Location} = await s3
-        .putObject(params)
-        .promise();
+    await s3.putObject(params).promise();
 
-    return Location;
+    return `s3://${S3_BUCKET_PATH}/${filePath}`;
 };

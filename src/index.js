@@ -28,16 +28,17 @@ exports.handler = async (event, context, callback) => {
         return response(400, "You need a url");
     }
 
+    // Todo, validation, sanitisation and adding a secret-ish token.
     const targetUrl = event.queryStringParameters.url;
+    const s3FolderPath = event.queryStringParameters.env;
+    const name = event.queryStringParameters.name;
 
-    if (!targetUrl) {
-        return response(400, "URL query parameter required");
+    if (!targetUrl && !s3FolderPath && !name) {
+        return response(400, "url, environment and name required");
     }
 
     try {
-
-        const result = await takeScreenshot(browser, targetUrl);
-
+        const result = await takeScreenshot(browser, targetUrl, s3FolderPath, name);
         return response(200, result);
     } catch (e) {
         console.log(e)
