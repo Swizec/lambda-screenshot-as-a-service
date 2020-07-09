@@ -60,6 +60,7 @@ exports.handler = async (event, context, callback) => {
 
         return response(200, result);
     } catch (e) {
+        console.log(e)
         return response(500, e);
     }
 };

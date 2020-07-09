@@ -2,14 +2,16 @@ service: screenshot-as-a-service
 
 provider:
     name: aws
+    region: eu-west-1
     runtime: nodejs12.x
     memorySize: 2536
     timeout: 180
     iamRoleStatements:
         - Effect: "Allow"
           Action:
-              - "s3:upload"
-          Resource: "arn:aws:s3:::techletter.app/*"
+              - "s3:PutObject"
+              - "s3:PutObjectAcl"
+          Resource: "arn:aws:s3:::public-for-testing123/*"
 
 functions:
     screenshot-function:

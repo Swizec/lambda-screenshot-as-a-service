@@ -1,27 +1,24 @@
 const aws = require("aws-sdk");
 const fs = require("fs");
+const mime = require('mime-types')
 
-const BUCKET = "techletter.app";
+const BUCKET = "public-for-testing123";
 
 exports.uploadScreenshot = async function uploadScreenshot(path) {
     const s3 = new aws.S3({
-        apiVersion: "2006-03-01",
+        region: 'eu-west-1'
     });
 
-    const buffer = await new Promise((resolve, reject) => {
-        fs.readFile(path, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-        });
-    });
+    let params     = {
+        Bucket: BUCKET,
+        Key: `screenshot-${new Date().getTime()}.png`,
+        ContentType: mime.lookup(path),
+        Body: fs.readFileSync(path),
+        ACL: 'public-read'
+    };
 
     const { Location } = await s3
-        .upload({
-            Bucket: BUCKET,
-            Key: `screenshot-${new Date().getTime()}.png`,
-            Body: buffer,
-            ACL: "public-read",
-        })
+        .putObject(params)
         .promise();
 
     return Location;
