@@ -27,6 +27,14 @@ functions:
                   method: GET
                   cors: true
 
+    image:
+        handler: dist/optimizeImage.handler
+        events:
+            - http:
+                  path: code
+                  method: GET
+                  cors: true
+
 package:
     include:
         - dist/**
