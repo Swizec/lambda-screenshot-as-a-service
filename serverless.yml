@@ -31,7 +31,7 @@ functions:
         handler: dist/optimizeImage.handler
         events:
             - http:
-                  path: code
+                  path: image
                   method: GET
                   cors: true
 
