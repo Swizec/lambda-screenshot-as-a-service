@@ -1,7 +1,9 @@
-const URL = require("url");
 const { uploadScreenshot } = require("./uploadScreenshot");
 
-exports.takeScreenshot = async (browser, targetUrl) => {
+export async function takeScreenshot(
+    browser: any,
+    targetUrl: string
+): Promise<string> {
     const page = await browser.newPage();
     await page.setViewport({
         width: 1920,
@@ -20,17 +22,13 @@ exports.takeScreenshot = async (browser, targetUrl) => {
 
     let element = null;
 
-    switch (URL.parse(await page.url()).hostname) {
+    switch (new URL(await page.url()).hostname) {
         case "twitter.com":
             await page.goto(
                 `https://tweet-embedder.swizec.vercel.app?url=${targetUrl}`,
                 {
                     waitUntil: ["domcontentloaded", "networkidle2"],
                 }
-            );
-
-            console.log(
-                `https://tweet-embedder.swizec.vercel.app?url=${targetUrl}`
             );
 
             element = await page.$("#tweet");
@@ -64,11 +62,6 @@ exports.takeScreenshot = async (browser, targetUrl) => {
         },
     });
 
-    console.error("Made screeshot");
-
-    const url = await uploadScreenshot(imagePath);
-
-    console.error("Got url", url);
-
-    return url;
-};
+    console.error("Made screeshot", imagePath);
+    return imagePath;
+}

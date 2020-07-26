@@ -1,6 +1,6 @@
 const chrome = require("chrome-aws-lambda");
 
-const getChrome = async () => {
+export const getChrome = async () => {
     let browser = null;
 
     try {
@@ -25,5 +25,3 @@ const getChrome = async () => {
 
     return browser;
 };
-
-module.exports = getChrome;

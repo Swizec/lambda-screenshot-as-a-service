@@ -12,13 +12,20 @@ provider:
           Resource: "arn:aws:s3:::techletter.app/*"
 
 functions:
-    screenshot-function:
-        handler: dist/index.handler
+    embeds:
+        handler: dist/embeds.handler
         events:
             - http:
-                  path: screenshot
+                  path: embed
                   method: GET
                   cors: true
+    # code:
+    #     handler: dist/code.handler
+    #     events:
+    #         - http:
+    #               path: code
+    #               method: GET
+    #               cors: true
 
 package:
     include:

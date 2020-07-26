@@ -1,20 +1,19 @@
-const aws = require("aws-sdk");
-const fs = require("fs");
+import aws from "aws-sdk";
+import fs from "fs";
+import util from "util";
 
 const BUCKET = "techletter.app";
 
-exports.uploadScreenshot = async function uploadScreenshot(path) {
+export async function uploadScreenshot(path: string): Promise<string> {
     const s3 = new aws.S3({
         apiVersion: "2006-03-01",
     });
 
-    const buffer = await new Promise((resolve, reject) => {
-        fs.readFile(path, (err, data) => {
-            if (err) reject(err);
-            resolve(data);
-        });
-    });
+    // read file from path
+    const readFile = util.promisify(fs.readFile);
+    const buffer = await readFile(path);
 
+    // upload to S3
     const { Location } = await s3
         .upload({
             Bucket: BUCKET,
@@ -25,4 +24,4 @@ exports.uploadScreenshot = async function uploadScreenshot(path) {
         .promise();
 
     return Location;
-};
+}

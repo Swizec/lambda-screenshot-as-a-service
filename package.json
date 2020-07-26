@@ -3,13 +3,14 @@
     "version": "1.1.2",
     "description": "Starter Kit for running Headless-Chrome by Puppeteer on AWS Lambda",
     "dependencies": {
+        "@types/aws-lambda": "^8.10.59",
+        "aws-lambda": "^1.0.6",
         "chrome-aws-lambda": "^3.1.1",
         "image-downloader": "^3.4.1",
         "js-base64": "^2.5.1",
         "puppeteer-core": "3.1.0",
         "tar": "^4.0.1",
-        "typescript": "^3.9.7",
-        "url": "^0.11.0"
+        "typescript": "^3.9.7"
     },
     "devDependencies": {
         "aws-sdk": "^2.358.0",
