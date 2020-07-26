@@ -4,7 +4,7 @@ provider:
     name: aws
     runtime: nodejs12.x
     memorySize: 2536
-    timeout: 180
+    timeout: 30
     iamRoleStatements:
         - Effect: "Allow"
           Action:
@@ -13,7 +13,7 @@ provider:
 
 functions:
     screenshot-function:
-        handler: src/index.handler
+        handler: dist/index.handler
         events:
             - http:
                   path: screenshot
@@ -21,5 +21,7 @@ functions:
                   cors: true
 
 package:
+    include:
+        - dist/**
     exclude:
         - node_modules/puppeteer/.local-chromium/**

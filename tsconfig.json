@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "sourceRoot": "./src",
+        "strict": true,
+        "baseUrl": "./",
+        "typeRoots": ["node_modules/@types"],
+        "types": ["node"],
+        "esModuleInterop": true,
+        "inlineSourceMap": true
+    }
+}

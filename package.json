@@ -8,6 +8,7 @@
         "js-base64": "^2.5.1",
         "puppeteer-core": "3.1.0",
         "tar": "^4.0.1",
+        "typescript": "^3.9.7",
         "url": "^0.11.0"
     },
     "devDependencies": {
@@ -19,6 +20,7 @@
         "serverless-hooks-plugin": "^1.1.0"
     },
     "scripts": {
-        "deploy": "sls deploy"
+        "build": "tsc",
+        "deploy": "npm run build && sls deploy"
     }
 }
