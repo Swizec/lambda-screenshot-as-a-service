@@ -19,13 +19,13 @@ functions:
                   path: embed
                   method: GET
                   cors: true
-    # code:
-    #     handler: dist/code.handler
-    #     events:
-    #         - http:
-    #               path: code
-    #               method: GET
-    #               cors: true
+    code:
+        handler: dist/code.handler
+        events:
+            - http:
+                  path: code
+                  method: GET
+                  cors: true
 
 package:
     include:
