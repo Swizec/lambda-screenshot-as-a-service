@@ -34,6 +34,14 @@ functions:
                   path: image
                   method: GET
                   cors: true
+                  
+    socialCard:
+        handler: dist/socialCard.handler
+        events:
+            - http:
+                path: social-card
+                method: GET
+                cors: true
 
 package:
     include:

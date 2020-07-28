@@ -1,0 +1,70 @@
+import { APIGatewayEvent } from "aws-lambda";
+
+import { uploadScreenshot } from "./uploadScreenshot"
+import { getChrome } from "./getChrome";
+import { APIResponse } from "./types";
+import { response } from "./util";
+
+export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
+    if (!event.queryStringParameters) {
+        return response(400, {
+            status: "error",
+            error: "You need a title",
+        });
+    }
+    
+    const title = event.queryStringParameters.title;
+    
+    try {
+        const browser = await getChrome();
+        const imagePath = await cardScreenshot(browser, title);
+
+        const url = await uploadScreenshot(imagePath);
+
+        console.error("Got url", url);
+
+        return response(200, {
+            status: "success",
+            url,
+        });
+    } catch (e) {
+        return response(500, {
+            status: "error",
+            error: e,
+        });
+    }
+}
+
+async function cardScreenshot(browser: any, title: string) {
+    const socialCardName = `socialCard-${new Date().getTime()}`;
+
+    const page = await browser.newPage();
+    const targetUrl = `https://swizec-com.swizec.vercel.app/render-social-card?title=${title}`;
+
+    console.log("TargetURL", targetUrl);
+
+    await page.goto(targetUrl, {
+        waitUntil: ["domcontentloaded", "networkidle0"],
+    });
+
+    let element = await page.$("#social-card");
+
+    const { x, y, width, height } = await element.boundingBox();
+
+    const imagePath = `/tmp/${socialCardName}.png`;
+
+    console.log("Loaded target social card");
+    console.log("dimensions", { x, y, width, height });
+
+    await page.screenshot({
+        path: imagePath,
+        clip: {
+            x,
+            y,
+            width,
+            height,
+        },
+    });
+
+    return imagePath;
+};
