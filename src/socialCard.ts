@@ -16,6 +16,7 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
     const title = event.queryStringParameters.title;
     
     try {
+        console.log("about to open browser")
         const browser = await getChrome();
         const imagePath = await cardScreenshot(browser, title);
 
@@ -28,6 +29,8 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
             url,
         });
     } catch (e) {
+        console.log("erroring out of main try")
+        console.log(e)
         return response(500, {
             status: "error",
             error: e,
@@ -37,6 +40,8 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
 async function cardScreenshot(browser: any, title: string) {
     const socialCardName = `socialCard-${new Date().getTime()}`;
+    
+    console.log("got socialCardname")
 
     const page = await browser.newPage();
     const targetUrl = `https://swizec-com.swizec.vercel.app/render-social-card?title=${title}`;
