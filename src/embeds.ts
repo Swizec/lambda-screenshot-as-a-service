@@ -24,6 +24,8 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
         console.error("Got url", url);
 
+        await browser.close();
+
         return response(200, {
             status: "success",
             url,

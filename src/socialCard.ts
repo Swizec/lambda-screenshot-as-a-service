@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from "aws-lambda";
 
-import { uploadScreenshot } from "./uploadScreenshot"
+import { uploadScreenshot } from "./uploadScreenshot";
 import { getChrome } from "./getChrome";
 import { APIResponse } from "./types";
 import { response } from "./util";
@@ -12,11 +12,11 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
             error: "You need a title",
         });
     }
-    
+
     const title = event.queryStringParameters.title;
-    
+
     try {
-        console.log("about to open browser")
+        console.log("about to open browser");
         const browser = await getChrome();
         const imagePath = await cardScreenshot(browser, title);
 
@@ -24,13 +24,15 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
         console.error("Got url", url);
 
+        await browser.close();
+
         return response(200, {
             status: "success",
             url,
         });
     } catch (e) {
-        console.log("erroring out of main try")
-        console.log(e)
+        console.log("erroring out of main try");
+        console.log(e);
         return response(500, {
             status: "error",
             error: e,
@@ -40,8 +42,8 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
 async function cardScreenshot(browser: any, title: string) {
     const socialCardName = `socialCard-${new Date().getTime()}`;
-    
-    console.log("got socialCardname")
+
+    console.log("got socialCardname");
 
     const page = await browser.newPage();
     const targetUrl = `https://swizec-com.swizec.vercel.app/render-social-card?title=${title}`;
@@ -72,4 +74,4 @@ async function cardScreenshot(browser: any, title: string) {
     });
 
     return imagePath;
-};
+}
