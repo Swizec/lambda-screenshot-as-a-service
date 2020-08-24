@@ -46,7 +46,7 @@ async function cardScreenshot(browser: any, title: string) {
     console.log("got socialCardname");
 
     const page = await browser.newPage();
-    const targetUrl = `https://swizec-com.swizec.vercel.app/render-social-card?title=${title}`;
+    const targetUrl = `https://swizec.com/render-social-card?title=${title}`;
 
     console.log("TargetURL", targetUrl);
 
