@@ -16,6 +16,13 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
     const targetUrl = event.queryStringParameters.url;
 
+    if (!targetUrl) {
+        return response(400, {
+            status: "error",
+            error: "You need a url",
+        });
+    }
+
     try {
         const browser = await getChrome();
         const imagePath = await takeScreenshot(browser, targetUrl);

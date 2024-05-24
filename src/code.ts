@@ -18,6 +18,13 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
     const codeType = event.queryStringParameters.codeType || "javascript";
     const urlencoded = event.queryStringParameters.urlencoded === "true";
 
+    if (!code) {
+        return response(400, {
+            status: "error",
+            error: "You need a code snippet",
+        });
+    }
+
     try {
         const browser = await getChrome();
         const imagePath = await screenshotCode(

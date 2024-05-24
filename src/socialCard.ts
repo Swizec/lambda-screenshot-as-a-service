@@ -15,6 +15,13 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
     const title = event.queryStringParameters.title;
 
+    if (!title) {
+        return response(400, {
+            status: "error",
+            error: "You need a title",
+        });
+    }
+
     try {
         console.log("about to open browser");
         const browser = await getChrome();
