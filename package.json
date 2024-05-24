@@ -5,10 +5,10 @@
     "dependencies": {
         "@types/aws-lambda": "^8.10.59",
         "aws-lambda": "^1.0.6",
-        "chrome-aws-lambda": "^3.1.1",
+        "chrome-aws-lambda": "^10.1.0",
         "image-downloader": "^3.4.1",
         "js-base64": "^2.5.1",
-        "puppeteer-core": "3.1.0",
+        "puppeteer-core": "10.1.0",
         "tar": "^4.0.1",
         "typescript": "^3.9.7"
     },

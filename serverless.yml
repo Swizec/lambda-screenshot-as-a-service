@@ -2,8 +2,9 @@ service: screenshot-as-a-service
 
 provider:
     name: aws
+    stage: dev2
     runtime: nodejs18.x
-    memorySize: 2536
+    memorySize: 2560
     timeout: 30
     iamRoleStatements:
         - Effect: "Allow"
