@@ -3,7 +3,7 @@ service: screenshot-as-a-service
 provider:
     name: aws
     stage: dev2
-    runtime: nodejs18.x
+    runtime: nodejs14.x
     memorySize: 2560
     timeout: 30
     iamRoleStatements:
