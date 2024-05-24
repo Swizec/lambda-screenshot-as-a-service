@@ -24,6 +24,7 @@ export async function takeScreenshot(
 
     switch (new URL(await page.url()).hostname) {
         case "twitter.com":
+        case "x.com":
             await page.goto(
                 `https://tweet-embedder.swizec.vercel.app?url=${targetUrl}`,
                 {
@@ -45,6 +46,10 @@ export async function takeScreenshot(
     }
 
     console.log("found element", element);
+
+    if (element === null) {
+        console.log(page.$("body").innerHTML);
+    }
 
     const { x, y, width, height } = await element.boundingBox();
 
