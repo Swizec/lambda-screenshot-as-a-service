@@ -29,7 +29,7 @@ export async function handler(event: APIGatewayEvent): Promise<APIResponse> {
 
         const url = await uploadScreenshot(imagePath);
 
-        console.error("Got url", url);
+        console.log("Got url", url);
 
         await browser.close();
 

@@ -9,7 +9,7 @@ provider:
     iamRoleStatements:
         - Effect: "Allow"
           Action:
-              - "s3:upload"
+              - "s3:*"
           Resource: "arn:aws:s3:::techletter.app/*"
 
 functions:
